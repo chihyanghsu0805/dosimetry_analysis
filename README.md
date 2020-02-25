@@ -1,6 +1,11 @@
 # dosimetry_analysis
 This repository contains codes that analyzes radiation dosimetry.
 
+## Scale Dose
+Dose by default is in Gy. However, in DICOM it is usually stored with DoseGridScaling factor ~0.001.
+This causes DICOM to NIFTI converters to misinterpret dose values and might be out of ranre.
+This code applies the DoseGridSclaing factor but stores the values in cGy so that the NIFTI converter can work correctly.
+
 ## Dose Variations
 This code computes different variations of relative biological effectiveness.
 
