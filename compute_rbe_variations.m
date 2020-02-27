@@ -1,29 +1,33 @@
-function [mcnamara, beltran, paganetti, faught] = compute_rbe_variations(dose_path, let_path, constants, output_path)
+function [dose_data, let_data, mcnamara, beltran, paganetti, faught] = compute_rbe_variations(dose_path, let_path, constants, output_path)
 
 a_b = constants.a_b;
 dose_per_fraction = constants.dose_per_fraction;
 
-dose_data = dicomread(dose_path);
-dose_info = dicominfo(dose_path);
-dose_data = double(dose_data)*dose_info.DoseGridScaling;
+dose_data = niftiread(dose_path);
+dose_info = niftiinfo(dose_path);
+dose_data = double(dose_data);
 dose_data = dose_data/100;
 
-let_data = dicomread(let_path);
-let_info = dicominfo(let_path);
-let_data = double(let_data)*let_info.DoseGridScaling;
+let_data = niftiread(let_path);
+let_info = niftiinfo(let_path);
+let_data = double(let_data);
 let_data = let_data/100;
 
 mcnamara = compute_mcnamara(dose_data, let_data, a_b, dose_per_fraction);
-niftiwrite(mcnamara, [output_path '/scaled.mcnamara.nii'], dose_info, 'Compressed', 1)
+% niftiwrite(mcnamara, [output_path '/scaled.mcnamara.nii'], dose_info, 'Compressed', 1)
+mcnamara = double(mcnamara)/100;
 
 beltran = compute_beltran(dose_data, let_data, a_b, dose_per_fraction);
-niftiwrite(beltran, [output_path '/scaled.beltran.nii'], dose_info, 'Compressed', 1)
+% niftiwrite(beltran, [output_path '/scaled.beltran.nii'], dose_info, 'Compressed', 1)
+beltran = double(beltran)/100;
 
 paganetti = compute_paganetti(dose_data, let_data, a_b, dose_per_fraction);
-niftiwrite(paganetti, [output_path '/scaled.paganetti.nii'], dose_info, 'Compressed', 1)
+% niftiwrite(paganetti, [output_path '/scaled.paganetti.nii'], dose_info, 'Compressed', 1)
+paganetti = double(paganetti)/100;
 
 faught = compute_faught(dose_data, let_data,  a_b, dose_per_fraction);
-niftiwrite(faught, [output_path '/scaled.faught.nii'], dose_info, 'Compressed', 1)
+% niftiwrite(faught, [output_path '/scaled.faught.nii'], dose_info, 'Compressed', 1)
+faught = double(faught)/100;
 
 function faught = compute_faught(dose_data, let_data, ~, ~)
 faught = dose_data.*(0.9863+0.04545*let_data);
