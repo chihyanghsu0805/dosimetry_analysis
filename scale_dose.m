@@ -1,6 +1,5 @@
 function scale_dose(dicom_path, output_path)
 
-dicom_path = dicom_path;
 dose = dicomread(dicom_path);
 info = dicominfo(dicom_path);
 dose = double(dose);
